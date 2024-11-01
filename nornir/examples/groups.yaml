@@ -1,0 +1,4 @@
+# groups.yaml
+---
+juniper_vmx:
+  platform: junos

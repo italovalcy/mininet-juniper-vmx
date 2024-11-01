@@ -1,0 +1,6 @@
+# vmx-group.yaml
+---
+juniper_vmx:
+  platform: junos
+  username: lab
+  password: lab123

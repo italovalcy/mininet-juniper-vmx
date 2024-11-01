@@ -1,0 +1,4 @@
+[project]
+name = "mininet_juniper_vmx"
+version = "0.1.0"
+dependencies = []

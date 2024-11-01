@@ -1,0 +1,65 @@
+set system services netconf ssh
+set system login user oess-user uid 3000
+set system login user oess-user class super-user
+set system login user oess-user authentication encrypted-password "$1$mtrlLUJR$qoEq5phaLeWKr5U6lB1fT/"
+set groups OESS
+set apply-groups OESS
+set routing-instances apply-groups OESS
+
+
+set interfaces ge-0/0/0 description "s3 -- h3"
+set interfaces ge-0/0/0 apply-groups OESS
+set interfaces ge-0/0/0 vlan-tagging
+set interfaces ge-0/0/0 encapsulation flexible-ethernet-services
+
+set interfaces ge-0/0/1 description "s3 -- s2"
+set interfaces ge-0/0/1 apply-groups OESS
+set interfaces ge-0/0/1 vlan-tagging
+set interfaces ge-0/0/1 encapsulation flexible-ethernet-services
+set interfaces ge-0/0/1 unit 0 vlan-id 1
+set interfaces ge-0/0/1 unit 0 family inet address 10.100.0.1/31
+set interfaces ge-0/0/1 unit 0 family iso
+set interfaces ge-0/0/1 unit 0 family mpls
+
+set interfaces ge-0/0/2 description "s3 -- s4"
+set interfaces ge-0/0/2 apply-groups OESS
+set interfaces ge-0/0/2 vlan-tagging
+set interfaces ge-0/0/2 encapsulation flexible-ethernet-services
+set interfaces ge-0/0/2 unit 0 vlan-id 1
+set interfaces ge-0/0/2 unit 0 family inet address 10.100.0.4/31
+set interfaces ge-0/0/2 unit 0 family iso
+set interfaces ge-0/0/2 unit 0 family mpls
+
+set interfaces lo0 unit 0 family inet address 192.100.0.3/32
+set interfaces lo0 unit 0 family iso address 49.0003.3333.3333.3333.00
+set routing-options router-id 192.100.0.3
+set routing-options autonomous-system 65000
+set protocols rsvp interface ge-0/0/1.0
+set protocols rsvp interface ge-0/0/2.0
+set protocols rsvp interface lo0.0
+set protocols mpls traceoptions file mpls.log
+set protocols mpls traceoptions file files 3
+set protocols mpls interface ge-0/0/1.0
+set protocols mpls interface ge-0/0/2.0
+set protocols mpls label-switched-path s3-s2 to 192.100.0.2
+set protocols mpls label-switched-path s3-s4 to 192.100.0.4
+set protocols bgp group internal-peers type internal
+set protocols bgp group internal-peers local-address 192.100.0.3
+set protocols bgp group internal-peers family l2vpn signaling
+set protocols bgp group internal-peers export send-direct
+set protocols bgp group internal-peers neighbor 192.100.0.2
+set protocols bgp group internal-peers neighbor 192.100.0.4
+
+set protocols isis traffic-engineering family inet shortcuts
+set protocols isis level 1 disable
+set protocols isis interface ge-0/0/1.0 bfd-liveness-detection minimum-receive-interval 500
+set protocols isis interface ge-0/0/1.0 bfd-liveness-detection multiplier 3
+set protocols isis interface ge-0/0/1.0 bfd-liveness-detection transmit-interval minimum-interval 750
+set protocols isis interface ge-0/0/1.0 level 2 metric 10
+set protocols isis interface ge-0/0/2.0 bfd-liveness-detection minimum-receive-interval 500
+set protocols isis interface ge-0/0/2.0 bfd-liveness-detection multiplier 3
+set protocols isis interface ge-0/0/2.0 bfd-liveness-detection transmit-interval minimum-interval 750
+set protocols isis interface ge-0/0/2.0 level 2 metric 10
+set protocols isis interface lo0.0 passive
+set policy-options policy-statement send-direct term 2 from protocol direct
+set policy-options policy-statement send-direct term 2 then accept
