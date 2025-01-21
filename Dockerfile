@@ -8,7 +8,7 @@ COPY hda.qcow2 /opt/vmx/hda.qcow2
 
 RUN export DEBIAN_FRONTEND=noninteractive \
  && apt-get update \
- && apt-get install -y --no-install-recommends qemu-system-x86 expect netcat-openbsd python3-pip iptables \
+ && apt-get install -y --no-install-recommends qemu-system-x86 qemu-utils expect netcat-openbsd python3-pip iptables \
  && rm -rf /var/lib/apt/lists/*
 
 RUN --mount=source=.,target=/mnt,type=bind \
