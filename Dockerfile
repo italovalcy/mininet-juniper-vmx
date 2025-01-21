@@ -12,7 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  && rm -rf /var/lib/apt/lists/*
 
 RUN --mount=source=.,target=/mnt,type=bind \
-    cp -r src configs nornir *.py *.sh /opt/vmx/ \
+    cp -r /mnt/src /mnt/configs /mnt/nornir /mnt/*.py /mnt/*.sh /opt/vmx/ \
  && cd /opt/vmx \
  && python3 -m pip install -r nornir/requirements.txt \
  && python3 -m pip install --no-cache-dir .
