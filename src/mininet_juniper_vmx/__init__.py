@@ -75,7 +75,7 @@ class VMXSwitch( Switch ):
         Cleanup.sh("pkill -f qemu-system-x86_64")
         Cleanup.sh("ovs-vsctl list-br | grep br-vmx | xargs -rl ovs-vsctl del-br")
         Cleanup.sh("rm -f /tmp/vmx-*")
-        Cleanup.sh("ip link show | egrep -o 'vmx-.+' | xargs -l ip link del")
+        Cleanup.sh("ip link show | egrep -o 'vmx-[^:]+' | xargs -r -l ip link del")
         Cleanup.sh("/opt/vmx/cleanup-mgmt-vmx.sh %s %s 2>/dev/null" % (cls.publish_driver, cls.publish_ip_intf))
         return switches
 
